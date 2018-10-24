@@ -4,7 +4,9 @@ var stopWatch = defaultStopWatchTimer;
 
 let questionInterval = defaultStopWatchTimer * 1000;
 
-var questionTimer, questionTimout;
+var questionTimer;
+
+var questionTimeout;
 
 var count = -1;
 
@@ -13,6 +15,8 @@ var clickable = true;
 var correctAnswer = 0;
 var incorrectAnswer = 0
 var unanswer = 0;
+
+var gameStarted = false;
 
 
 var q1 = {
@@ -115,8 +119,9 @@ function displayResult(){
     $('#a2').text("Incorrect Answers: " + incorrectAnswer);
     $('#a3').text("Unanswered: " + unanswer);
     
+    gameStarted = false;
     $('#restart').text ("Start Over?");
-    $('#restart').on('click',startGame );
+    $('#restart').on('click',startGame);
 
     
 }
@@ -131,15 +136,23 @@ function getQuestion() {
 }
 
 function timeout(){
-    unanswer++;
     clearInterval(questionTimer);
     displayResponse(true, false);
 }
 
 function startGame() {
-  count = -1;
   
-  getQuestion();
+  $('#restart').empty();
+  if (!gameStarted){
+      gameStarted = true;
+      count = -1;
+      correctAnswer = 0;
+     incorrectAnswer = 0
+     unanswer = 0;
+     clearTimeout(questionTimeout);
+     clearInterval(questionInterval);
+     getQuestion();
+  }
 }
 
 function displayResponse(outOfTime, correctAnswer){
@@ -148,23 +161,28 @@ function displayResponse(outOfTime, correctAnswer){
     $('.answer').text('');
 
     $('.answers').removeClass('answer');
-
+    var img = $('<img>');
+    img.attr('width', '150px');
+    img.attr('height', '150px');
     if (outOfTime){
          $('#a2').text('Out of time');
-         $('#a3').text('The correct answer was ' + questions[count].getAnswer());
+         $('#a3').text('The correct answer was ' + questions[count].getAnswer());      
+         img.attr('src', "./assets/images/question.png");      
     } else{
         if (correctAnswer){
-            $('#a2').text('Your answer was right')
+            $('#a2').text('Your answer was right');
+            img.attr('src', "./assets/images/checkmark.png");         
         }else {
             $('#a2').text('Your answer was wrong');
             $('#a3').text('The correct answer was ' + questions[count].getAnswer());
-
-        }
+            img.attr('src', "./assets/images/incorrect.png");    
+       }
     }
+    $('#a4').append(img);
 
     if (count === questions.length - 1){
         // display final result 
-        setTimeout(displayResult,5000);
+        questionTimeout = setTimeout(displayResult,5000);
     } else {
         setTimeout(getQuestion, 5000);
     }
