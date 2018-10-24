@@ -1,0 +1,26 @@
+
+
+
+.container{
+    font-family: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif';
+    font-size: 24px;
+    text-align: center;
+
+}
+
+.answer:hover, #start:hover{
+    background-color: green;
+}
+
+#start{
+    font-size: 40px;
+}
+
+#title {
+    width: 100%;
+    align-content: center;
+    text-align: center;
+    padding-top: 20px;
+    padding-bottom: 10px;
+}
+
